@@ -897,7 +897,13 @@ Bool_t AliAnalysisTaskNTGJ::Run()
               sizeof(_branch_cell_voronoi_area) /
               sizeof(*_branch_cell_voronoi_area), NAN);
     if (_emcal_geometry != NULL) {
-        _emcal_cell_position = new std::vector<point_2d_t>();
+        if (_emcal_cell_position == NULL) {
+            _emcal_cell_position = new std::vector<point_2d_t>();
+        }
+        else {
+            reinterpret_cast<std::vector<point_2d_t> *>
+            (_emcal_cell_position)->clear();
+        }
         for (unsigned int cell_id = 0; cell_id < EMCAL_NCELL;
              cell_id++) {
             TVector3 v;
@@ -1155,6 +1161,8 @@ Bool_t AliAnalysisTaskNTGJ::Run()
                 if (_branch_ntrack >= NTRACK_MAX) {
                     break;
                 }
+
+                itrack++;
             }
         }
     }
@@ -1974,6 +1982,8 @@ Bool_t AliAnalysisTaskNTGJ::Run()
                                     sqrt(dr_2), track_pt_minus_ue + ue));
                         }
                     }
+
+                    itrack++;
                 }
             }
 
