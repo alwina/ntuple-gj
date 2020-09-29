@@ -919,32 +919,32 @@ Bool_t AliAnalysisTaskNTGJ::Run()
                     point_2d_t(v.Eta(), v.Phi()));
         }
 
-        std::vector<double> emcal_cell_area;
-        std::vector<std::set<size_t> > emcal_cell_incident;
+        // std::vector<double> emcal_cell_area;
+        // std::vector<std::set<size_t> > emcal_cell_incident;
 
-        voronoi_area_incident(
-            emcal_cell_area, emcal_cell_incident,
-            *reinterpret_cast<std::vector<point_2d_t> *>
-            (_emcal_cell_position));
+        // voronoi_area_incident(
+        //     emcal_cell_area, emcal_cell_incident,
+        //     *reinterpret_cast<std::vector<point_2d_t> *>
+        //     (_emcal_cell_position));
 
-        double sum_area_inside = 0;
-        size_t count_inside = 0;
+        // double sum_area_inside = 0;
+        // size_t count_inside = 0;
 
-        for (int cell_id = 0; cell_id < EMCAL_NCELL; cell_id++) {
-            if (inside_edge(cell_id, 1)) {
-                sum_area_inside += emcal_cell_area[cell_id];
-                count_inside++;
-            }
-        }
+        // for (int cell_id = 0; cell_id < EMCAL_NCELL; cell_id++) {
+        //     if (inside_edge(cell_id, 1)) {
+        //         sum_area_inside += emcal_cell_area[cell_id];
+        //         count_inside++;
+        //     }
+        // }
 
-        const double mean_area_inside =
-            sum_area_inside / count_inside;
+        // const double mean_area_inside =
+        //     sum_area_inside / count_inside;
 
-        for (int cell_id = 0; cell_id < EMCAL_NCELL; cell_id++) {
-            _branch_cell_voronoi_area[cell_id] =
-                inside_edge(cell_id, 1) ?
-                emcal_cell_area[cell_id] : mean_area_inside;
-        }
+        // for (int cell_id = 0; cell_id < EMCAL_NCELL; cell_id++) {
+        //     _branch_cell_voronoi_area[cell_id] =
+        //         inside_edge(cell_id, 1) ?
+        //         emcal_cell_area[cell_id] : mean_area_inside;
+        // }
     }
 
     std::vector<size_t> stored_mc_truth_index;
