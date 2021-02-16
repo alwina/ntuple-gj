@@ -17,9 +17,11 @@ runPrefix:        000
 runNumber:        [296621]
 
 # gridDataDir:      /alice/data/2015/LHC15o
-# dataPattern:      /pass1/AOD194/*/AliAOD.root
+# dataPattern:      /pass2/AOD194/*/AliAOD.root
 # runPrefix:        000
 # runNumber:        [246766]
+# physicsSelection: true
+# physicsSelectionPileupCut: false
 
 # gridDataDir:      /alice/sim/2018/LHC18b10a_calo/4
 # dataPattern:      /AOD/*/AliAOD.root
@@ -28,6 +30,11 @@ runNumber:        [296621]
 # gridDataDir:      /alice/sim/2019/LHC19i3a1/4
 # dataPattern:      /AOD/*/AliAOD.root
 # runNumber:        [294925]
+
+# gridDataDir:            /alice/sim/2017/LHC17g6a1/4
+# dataPattern:            /AOD/*/AliAOD.root
+# runNumber:              [197388, 197387, 197386, 197351, 197348, 197342, 197302, 197300, 197299, 197298, 197297, 197296, 197260, 197258, 197256, 197255, 197254, 197247, 197184, 197142, 197139, 197138, 197092, 197091, 197090, 197089, 197031, 197015, 197012, 197011, 197003, 196974, 196973, 196972, 196965, 196870, 196869, 196722, 196721, 196706, 196702, 196701, 196648, 196648, 196608, 196535, 196477, 196475, 196310, 196309, 196308, 196214, 196208, 196201, 196200, 196199, 196197, 196194, 196187, 196185, 196107, 196091, 196090, 196089, 196085, 195958, 195955, 195954, 195935, 195872, 195867, 195831, 195827, 195826, 195787, 195783, 195767, 195760, 195724]
+# runNumber:              [197388, 197387, 197386, 197351, 197348, 197342, 197302, 197300, 197299, 197298, 197297, 197296, 197260, 197258, 197256, 197255, 197254, 197247, 197184, 197142]
 
 isMC: false
 isEmbed: false
@@ -38,4 +45,5 @@ emcalCorrection:    emcal_correction.yaml
 # file list for running locally - do not use alien
 # embedLocalFileList:      pp-filelist-19i3a.txt
 # file pattern for running on grid - do not run in test mode
-embedGridFilePattern:   alien:///alice/sim/2019/LHC19i3a2/1
+# embedGridFilePattern:   alien:///alice/sim/2019/LHC19i3a2/1
+# embedGridFilePattern:   alien:///alice/sim/2017/LHC17g6a1/4
