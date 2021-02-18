@@ -1,8 +1,8 @@
 gridWorkingDir:     workingdir_test
 gridOutputDir:      outputdir
-aliPhysicsVersion:      vAN-20200629_ROOT6-1
-package:                fastjet::v3.2.1_1.024-alice3-71
-package:                boost::v1.72.0-alice1-1
+aliPhysicsVersion:      vAN-20201205_ROOT6-1
+package:                fastjet::v3.2.1_1.024-alice3-94
+package:                boost::v1.72.0-alice2-7
 # package:                GCC-Toolchain::v7.3.0-alice2-7
 # aliROOTVersion:         v5-09-54a-2
 trackCutsPeriod:  lhc18q
@@ -17,7 +17,7 @@ runPrefix:        000
 runNumber:        [296621]
 
 # gridDataDir:      /alice/data/2015/LHC15o
-# dataPattern:      /pass2/AOD194/*/AliAOD.root
+# dataPattern:      /pass2/AOD242/*/AliAOD.root
 # runPrefix:        000
 # runNumber:        [246766]
 # physicsSelection: true

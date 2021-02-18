@@ -157,7 +157,7 @@ Clusterizer:
     recalDistToBadChannels: true                    
     recalShowerShape: false                         
     remapMcAod: false             # true on old productions
-    clusterizer: kClusterizerv2
+    clusterizer: kClusterizerv3
 Clusterizer_combined:
     enabled: true
     setCellMCLabelFromCluster: 0
