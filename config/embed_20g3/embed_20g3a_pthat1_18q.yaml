@@ -4,7 +4,7 @@ aliPhysicsVersion:      vAN-20201205_ROOT6-1
 package:                fastjet::v3.2.1_1.024-alice3-94
 package:                boost::v1.72.0-alice2-7
 gridDataDir:			/alice/data/2018/LHC18q
-dataPattern:      /pass3/AOD/*/AliAOD.root
+dataPattern:      /pass3/AOD242/*/AliAOD.root
 runPrefix:        000
 runNumber:			  [295913]
 trackCutsPeriod:  lhc18q

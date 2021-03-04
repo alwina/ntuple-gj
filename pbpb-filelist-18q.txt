@@ -1,1 +1,1 @@
-/home/alidock/gridfiles/data/2018/LHC18q/000296623/pass1/AOD/001/AliAOD.root
+/home/alidock/gridfiles/data/2018/LHC18q/000296623/pass3/AOD242/0001/AliAOD.root
