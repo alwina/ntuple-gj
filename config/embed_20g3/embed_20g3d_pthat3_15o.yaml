@@ -1,0 +1,23 @@
+gridWorkingDir:			workingdir
+gridOutputDir:			outputdir_20g3d_pthat3
+aliPhysicsVersion:      vAN-20201205_ROOT6-1
+package:                fastjet::v3.2.1_1.024-alice3-94
+package:                boost::v1.72.0-alice2-7
+gridDataDir:			/alice/data/2015/LHC15o
+dataPattern:      /pass2/AOD242/*/AliAOD.root
+runPrefix:        000
+runNumber:			  [246225]
+trackCutsPeriod:  lhc15o
+emcalCorrection:    emcal_correction_embed.yaml
+emcalGeometryFilename:  	geometry_2015.root
+emcalLocal2MasterFilename:  	EMCALlocal2master.root
+skimClusterMinE:        15.0
+splitMaxInputFileNumber: 2
+isMC: false
+isEmbed: true
+
+# settings for embedding - only one should be active at a time
+# file list for running locally - do not use alien
+# embedLocalFileList:      pp-filelist-19i3a.txt
+# file pattern for running on grid - do not run in test mode
+embedGridFilePattern:   alien:///alice/sim/2020/LHC20g3d/3
