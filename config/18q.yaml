@@ -1,5 +1,5 @@
 gridWorkingDir:			workingdir
-gridOutputDir:			outputdir_18q/296621
+gridOutputDir:			outputdir_18q_296621
 aliPhysicsVersion:      vAN-20201205_ROOT6-1
 package:                fastjet::v3.2.1_1.024-alice3-94
 package:                boost::v1.72.0-alice2-7
