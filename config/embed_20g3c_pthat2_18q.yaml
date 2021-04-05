@@ -6,7 +6,8 @@ package:                boost::v1.72.0-alice2-7
 gridDataDir:			/alice/data/2018/LHC18q
 dataPattern:      /pass3/AOD242/*/AliAOD.root
 runPrefix:        000
-runNumber:			  [296509]
+runNumber:			  [295758]
+# runNumber:        [296509]
 trackCutsPeriod:  lhc18q
 emcalCorrection:    emcal_correction_embed.yaml
 emcalGeometryFilename:  	geometry_2015.root
