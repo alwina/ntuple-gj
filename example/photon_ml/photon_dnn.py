@@ -11,7 +11,9 @@ prng_seed = 1009732533  # OEIS A002205
 import numpy
 numpy.random.seed(prng_seed)
 import tensorflow
-tensorflow.set_random_seed(prng_seed)
+tensorflow.random.set_seed(prng_seed)
+from scipy import interpolate
+import scipy
 
 batch_size = 144
 nb_classes = 2
@@ -65,23 +67,47 @@ for o, a in option:
     elif o == '--relu':
         activation = 'relu'
 
+#scipy.interpolate.splev fits a spline to data.
+def get_spline(data):
+    y,binEdges = numpy.histogram(data,50)
+    y_error = numpy.sqrt(y)
+    y_error[y_error == 0] = 1
+    w = 1/y_error
+    x = 0.5*(binEdges[1:]+binEdges[:-1])
+    return scipy.interpolate.splrep(x, y, w, s=0)
+
+def reweight_prompt(cluster_Inv_E,norm):
+    x = cluster_Inv_E**(-2)
+    tck = get_spline(x)
+    r = scipy.interpolate.splev(x, tck, der=0)
+    return norm / r
+
+def reweight_nonprompt(cluster_Inv_E,norm):
+    x = cluster_Inv_E**(-2)
+    tck = get_spline(x)
+    r = scipy.interpolate.splev(x, tck, der=0)
+    r *= reweight_prompt(cluster_Inv_E,norm)
+    return r
+
 # Weights to depopulate nonprompt photons, such the E_T distribution
 # matches that of the prompt ones. Fit is performed in ROOT using a
 # spline
-
-def reweight_prompt(inv_sqrt_x):
-    param = (1.58972e+02, -2.21542e+02, 1.18650e+02, -2.72830e+01,
-             2.24137e+00)
+def reweight_prompt_old(inv_sqrt_x):
+    param = (49106.129, -66807.181, 32507.609, -6690.8605, 494.94367)
     x = inv_sqrt_x**(-2)
     r = math.exp(param[0] + param[1] * math.log(x) +
-                 param[2] * math.log(x)**2 +
-                 param[3] * math.log(x)**3 +
-                 param[4] * math.log(x)**4)
-    return 366.358683429 / r
+            param[2] * math.log(x)**2 +
+            param[3] * math.log(x)**3 +
+            param[4] * math.log(x)**4)
 
-def reweight_nonprompt(inv_sqrt_x):
-    param = (-3.20883e-05, 1.68863e-03, -2.82423e-02, 2.39077e+01,
-             8.93126e-01)
+    N_prompt = 271539.00
+    N_non_prompt = 19336.000  
+    norm = N_prompt/N_non_prompt
+
+    return norm / r
+
+def reweight_nonprompt_old(inv_sqrt_x):
+    param = (-16925.763, 22179.933, -10359.786, 2078.5736, -152.59025)
     x = inv_sqrt_x**(-2)
     r = 0.5 * (1 + math.erf(1e+4 * (param[3] - x))) * \
         (param[0] * x**4 + param[1] * x**3 + param[2] * x**2 -
@@ -113,7 +139,7 @@ def add_activation(activation):
 
 import math, h5py
 
-filename = '/mnt/by-uuid/ca988570-a1e6-4d46-a186-20f7c6704a5c/scratch/photon_ml_ppb_pythia_dpmjet_5x5.h5'
+filename = './embed_20g3d_pthat4_15o_246392.hdf5'
 
 f = h5py.File(filename, 'r')
 
@@ -129,8 +155,7 @@ f.close()
 # Apply weighting
 column_inv_sqrt_pt = X.shape[1] - 4
 print('column_inv_sqrt_pt =', column_inv_sqrt_pt, file = sys.stderr)
-reweight_prompt = numpy.vectorize(reweight_prompt)
-reweight_nonprompt = numpy.vectorize(reweight_nonprompt)
+norm = len(y[ y[:] == 1 ]) / len(y[ y[:] == 0 ]) 
 
 i = numpy.argwhere(
     numpy.any(
@@ -140,7 +165,7 @@ i = numpy.argwhere(
                     ((y == 1.0).T,
                      numpy.expand_dims(
                          numpy.random.rand(X.shape[0]) <
-                         reweight_prompt(X[:, column_inv_sqrt_pt]),
+                         reweight_prompt(X[:, column_inv_sqrt_pt],norm),
                          axis = 0))),
                 axis = 0), axis = 0),
              numpy.expand_dims(numpy.all(
@@ -148,7 +173,7 @@ i = numpy.argwhere(
                      ((y == 0.0).T,
                       numpy.expand_dims(
                           numpy.random.rand(X.shape[0]) <
-                          reweight_nonprompt(X[:, column_inv_sqrt_pt]),
+                          reweight_nonprompt(X[:, column_inv_sqrt_pt],norm),
                           axis = 0))),
                  axis = 0), axis = 0))), axis = 0)).flatten()
 
@@ -166,7 +191,8 @@ nfeature = X_train.shape[1]
 
 import keras.backend
 
-if keras.backend.image_dim_ordering() == 'th':
+# keras.backend.image_data_format()
+if keras.backend.image_data_format() == 'th':
     X_train = X_train.reshape(X_train.shape[0], nfeature)
     X_test = X_test.reshape(X_test.shape[0], nfeature)
 else:
