@@ -11,7 +11,7 @@ prng_seed = 1009732533  # OEIS A002205
 import numpy
 numpy.random.seed(prng_seed)
 import tensorflow
-tensorflow.random.set_seed(prng_seed)
+tensorflow.compat.v1.set_random_seed
 from scipy import interpolate
 import scipy
 
@@ -86,7 +86,7 @@ def reweight_nonprompt(cluster_Inv_E,norm):
     x = cluster_Inv_E**(-2)
     tck = get_spline(x)
     r = scipy.interpolate.splev(x, tck, der=0)
-    r *= reweight_prompt(cluster_Inv_E,norm)
+    # r *= reweight_prompt(cluster_Inv_E,norm)
     return r
 
 # Weights to depopulate nonprompt photons, such the E_T distribution
@@ -189,7 +189,8 @@ y_test -= 1
 
 nfeature = X_train.shape[1]
 
-import keras.backend
+# import tensorflow.keras.backend
+from tensorflow import keras
 
 # keras.backend.image_data_format()
 if keras.backend.image_data_format() == 'th':
@@ -210,7 +211,7 @@ f = open('photon_discr_norm.h', 'w')
 print('static const float mean[' + str(len(mean)) + '] = {' + ', '.join(map(lambda x: '%.8e' % x, mean)) + '};', file = f)
 print('static const float std[' + str(len(std)) + '] = {' + ', '.join(map(lambda x: '%.8e' % x, std)) + '};', file = f)
 f.close()
-sys.exit(0)
+# sys.exit(0)
 
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
@@ -218,15 +219,17 @@ print('X_train shape:', X_train.shape, file = sys.stderr)
 print(X_train.shape[0], 'train samples', file = sys.stderr)
 print(X_test.shape[0], 'test samples', file = sys.stderr)
 
-import keras.models
-import keras.layers
+# import tensorflow.keras.models
+# import tensorflow.keras.layers
 if activation != 'relu':
     import keras.layers.advanced_activations
-import keras.utils
+# import tensorflow.keras.utils
 
 # convert class vectors to binary class matrices
-Y_train = keras.utils.np_utils.to_categorical(y_train, nb_classes)
-Y_test = keras.utils.np_utils.to_categorical(y_test, nb_classes)
+# Y_train = keras.utils.np_utils.to_categorical(y_train, nb_classes)
+# Y_test = keras.utils.np_utils.to_categorical(y_test, nb_classes)
+Y_train = tensorflow.keras.utils.to_categorical(y_train, nb_classes)
+Y_test = tensorflow.keras.utils.to_categorical(y_test, nb_classes)
 
 model = keras.models.Sequential()
 
