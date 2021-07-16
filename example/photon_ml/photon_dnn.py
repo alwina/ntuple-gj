@@ -15,6 +15,8 @@ tensorflow.compat.v1.set_random_seed
 from scipy import interpolate
 import scipy
 
+import spline_reweights
+
 batch_size = 144
 nb_classes = 2
 nb_epoch = 100
@@ -66,28 +68,6 @@ for o, a in option:
         activation = 'elu'
     elif o == '--relu':
         activation = 'relu'
-
-#scipy.interpolate.splev fits a spline to data.
-def get_spline(data):
-    y,binEdges = numpy.histogram(data,50)
-    y_error = numpy.sqrt(y)
-    y_error[y_error == 0] = 1
-    w = 1/y_error
-    x = 0.5*(binEdges[1:]+binEdges[:-1])
-    return scipy.interpolate.splrep(x, y, w, s=0)
-
-def reweight_prompt(cluster_Inv_E,norm):
-    x = cluster_Inv_E**(-2)
-    tck = get_spline(x)
-    r = scipy.interpolate.splev(x, tck, der=0)
-    return norm / r
-
-def reweight_nonprompt(cluster_Inv_E,norm):
-    x = cluster_Inv_E**(-2)
-    tck = get_spline(x)
-    r = scipy.interpolate.splev(x, tck, der=0)
-    # r *= reweight_prompt(cluster_Inv_E,norm)
-    return r
 
 # Weights to depopulate nonprompt photons, such the E_T distribution
 # matches that of the prompt ones. Fit is performed in ROOT using a
@@ -165,7 +145,7 @@ i = numpy.argwhere(
                     ((y == 1.0).T,
                      numpy.expand_dims(
                          numpy.random.rand(X.shape[0]) <
-                         reweight_prompt(X[:, column_inv_sqrt_pt],norm),
+                         spline_reweights.reweight_prompt(X[:, column_inv_sqrt_pt],norm),
                          axis = 0))),
                 axis = 0), axis = 0),
              numpy.expand_dims(numpy.all(
@@ -173,7 +153,7 @@ i = numpy.argwhere(
                      ((y == 0.0).T,
                       numpy.expand_dims(
                           numpy.random.rand(X.shape[0]) <
-                          reweight_nonprompt(X[:, column_inv_sqrt_pt],norm),
+                          spline_reweights.reweight_nonprompt(X[:, column_inv_sqrt_pt],norm),
                           axis = 0))),
                  axis = 0), axis = 0))), axis = 0)).flatten()
 

@@ -2,6 +2,9 @@ from scipy import interpolate
 import scipy
 import numpy
 
+# Weights to depopulate nonprompt photons, such the E_T distribution
+# matches that of the prompt ones. Fit is performed using scipy interpolation 
+
 def get_spline(data):
     y,binEdges = numpy.histogram(data,50)
     y_error = numpy.sqrt(y)
